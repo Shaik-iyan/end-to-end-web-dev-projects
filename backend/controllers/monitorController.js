@@ -34,4 +34,22 @@ const getMyMonitors=async(req,res)=>{
         res.status(500).json({message:"server error"});
     }
 };
-module.exports={createMonitor,getMyMonitors};
+const updateMonitor=async (req,res)=>{
+    try{
+        const{name,url,method}=req.body;
+        const updatedAPI=await MonitoredAPI.findOneAndUpdate({
+            _id:req.params.id,
+            createdBy:req.user.userId
+        },{name,url,method},{returnDocument:"after",runValidators:true});
+        if(!updatedAPI){
+            return res.status(404).json({message:"APi not found or you are not authorized to update it"});
+        }
+        res.status(200).json({message:"API updated success",data:updatedAPI});
+    }catch(error){
+        console.log("req.user",req.user);
+        console.log("params id:",req.params.id);
+        console.log("update monitor error",error.message);
+        res.status(500).json({message:"Server error"});
+    }
+};
+module.exports={createMonitor,getMyMonitors,updateMonitor};
