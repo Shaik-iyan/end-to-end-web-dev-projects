@@ -1,5 +1,6 @@
 const User=require("../models/User.js");
 const bcrypt=require("bcryptjs");
+const jwt =require("jsonwebtoken");
 const signup=async(req,res)=>{
     try{
         const {name,email,password}=req.body;
@@ -48,7 +49,7 @@ const login=async(req,res)=>{
             return res.status(400).json({message:"email and password are required"});
         }
         const user=await User.findOne({
-            email:email.tolowerCase()
+            email:email.toLowerCase()
         });
         if(!user){
             return res.status(401).json({
