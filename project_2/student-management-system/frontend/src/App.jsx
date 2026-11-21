@@ -11,7 +11,6 @@ function App() {
 
   const [editId, setEditId] = useState(null);
 
-  // CREATE AND UPDATE
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -46,7 +45,6 @@ function App() {
     setCourse("");
   }
 
-  // EDIT STUDENT
   function editStudent(student) {
     setName(student.name);
     setEmail(student.email);
@@ -54,12 +52,10 @@ function App() {
     setEditId(student.id);
   }
 
-  // DELETE STUDENT
   function deleteStudent(id) {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this student?"
     );
-
     if (confirmDelete) {
       setStudents(
         students.filter((student) => student.id !== id)
@@ -117,33 +113,23 @@ function App() {
       </form>
 
       <h2>Student Records ({students.length})</h2>
-
       <div className="student-list">
-
         {students.map((student) => (
           <div className="student-card" key={student.id}>
-
             <h3>{student.name}</h3>
             <p>{student.email}</p>
             <p>{student.course}</p>
-
             <div className="actions">
-
               <button onClick={() => editStudent(student)}>
                 Edit
               </button>
-
               <button onClick={() => deleteStudent(student.id)}>
                 Delete
               </button>
-
             </div>
-
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }
