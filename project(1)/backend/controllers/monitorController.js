@@ -52,4 +52,23 @@ const updateMonitor=async (req,res)=>{
         res.status(500).json({message:"Server error"});
     }
 };
-module.exports={createMonitor,getMyMonitors,updateMonitor};
+const deleteMonitor=async(req,res)=>{
+    try{
+        const deletedAPI=await MonitoredAPI.findOneAndDelete({
+            _id:req.params.id,
+            createdBy:req.user.userId
+        });
+        if(!deletedAPI){
+            return res.status(404).json({
+                message:"API not found "
+            });
+        }
+        res.status(200).json({
+            message:"API deleted success",data:deletedAPI
+        });
+    }catch(error){
+        console.log("Deleted monitor error",error.message);
+        res.status(500).json({message:"Server error"});
+    }
+};
+module.exports={createMonitor,getMyMonitors,updateMonitor,deleteMonitor};
