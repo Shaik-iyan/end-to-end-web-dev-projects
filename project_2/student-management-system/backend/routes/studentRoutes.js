@@ -16,10 +16,7 @@ router.get("/", async (req, res) => {
       limit = 5
     } = req.query;
 
-    // 2. Create filter
     const filter = {};
-
-    // Search by name or email
     if (search.trim()) {
       filter.$or = [
         {
@@ -41,7 +38,6 @@ router.get("/", async (req, res) => {
     if (course.trim()) {
       filter.course = course.trim();
     }
-
     // 3. Validate sorting
     const allowedSortFields = [
       "name",
@@ -49,24 +45,18 @@ router.get("/", async (req, res) => {
       "course",
       "createdAt"
     ];
-
     const sortField = allowedSortFields.includes(sort)
       ? sort
       : "name";
-
     const sortOrder = order === "desc" ? -1 : 1;
-
     // 4. Pagination
     const currentPage = Math.max(1, Number(page) || 1);
-
     const pageSize = Math.min(
       50,
       Math.max(1, Number(limit) || 5)
     );
-
     // 5. Count matching students
     const totalStudents = await Student.countDocuments(filter);
-
     // 6. Get students
     const students = await Student.find(filter)
       .sort({ [sortField]: sortOrder })

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import "./App.css";
+import Auth from "./Auth";
 
 import {
   getStudents,
@@ -10,6 +11,17 @@ import {
 } from "./services/studentServices.js";
 
 function App() {
+  // Logged-in user
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      localStorage.removeItem("user");
+      return null;
+    }
+  });
+
   // Student data
   const [students, setStudents] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -38,11 +50,11 @@ function App() {
       setLoading(true);
 
       const data = await getStudents({
-        search: search,
+        search,
         course: courseFilter,
         sort: "name",
         order: sortOrder,
-        page: page,
+        page,
         limit: 5
       });
 
@@ -62,10 +74,36 @@ function App() {
     }
   };
 
-  // Fetch whenever search, filter, sorting or page changes
+  // Fetch students only when a user is logged in
   useEffect(() => {
-    fetchStudents();
-  }, [search, courseFilter, sortOrder, page]);
+    if (currentUser) {
+      fetchStudents();
+    } else {
+      setStudents([]);
+      setTotalStudents(0);
+      setTotalPages(1);
+      setLoading(false);
+    }
+  }, [currentUser, search, courseFilter, sortOrder, page]);
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setCurrentUser(null);
+
+    // Clear form and search states
+    setName("");
+    setEmail("");
+    setCourse("");
+    setEditId(null);
+    setSearch("");
+    setCourseFilter("");
+    setSortOrder("asc");
+    setPage(1);
+    setError("");
+  };
 
   // Add or update student
   const handleSubmit = async (e) => {
@@ -96,7 +134,9 @@ function App() {
       setPage(1);
 
       // Refresh student list
-      await fetchStudents();
+      if (page === 1) {
+        await fetchStudents();
+      }
 
     } catch (err) {
       console.error("Save error:", err);
@@ -135,16 +175,13 @@ function App() {
       "Are you sure you want to delete this student?"
     );
 
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     try {
       setError("");
 
       await deleteStudent(id);
 
-      // Refresh student list
       await fetchStudents();
 
     } catch (err) {
@@ -153,8 +190,25 @@ function App() {
     }
   };
 
+  // Show authentication page when logged out
+  if (!currentUser) {
+    return <Auth onLogin={setCurrentUser} />;
+  }
+
+  // Main dashboard
   return (
     <div className="container">
+
+      {/* User Header */}
+      <div className="user-header">
+        <p>
+          Welcome, <strong>{currentUser.name}</strong>!
+        </p>
+
+        <button onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
 
       <h1>Student Management System</h1>
 
