@@ -1,102 +1,104 @@
-
-import { useState } from "react";
-import "./App.css";
-
+import { useEffect, useState } from "react";
+import {
+  getStudents,
+  addStudent,
+  updateStudent,
+  deleteStudent
+} from "./services/studentServices.js";
 function App() {
   const [students, setStudents] = useState([]);
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [course, setCourse] = useState("");
-
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e) {
+  const fetchStudents = async () => {
+    try {
+      setError("");
+      const data = await getStudents();
+      setStudents(data);
+    } catch (err) {
+      setError("Could not load students. Check your backend.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name.trim() || !email.trim() || !course.trim()) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    if (editId !== null) {
-      setStudents(
-        students.map((student) =>
-          student.id === editId
-            ? { ...student, name, email, course }
-            : student
-        )
-      );
-
+    const studentData = { name, email, course };
+    try {
+      if (editId) {
+        await updateStudent(editId, studentData);
+      } else {
+        await addStudent(studentData);
+      }
+      setName("");
+      setEmail("");
+      setCourse("");
       setEditId(null);
-    } else {
-      const newStudent = {
-        id: Date.now(),
-        name,
-        email,
-        course
-      };
-
-      setStudents([...students, newStudent]);
+      await fetchStudents();
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Unable to save student."
+      );
     }
-
-    setName("");
-    setEmail("");
-    setCourse("");
-  }
-
-  function editStudent(student) {
+  };
+  const handleEdit = (student) => {
     setName(student.name);
     setEmail(student.email);
     setCourse(student.course);
-    setEditId(student.id);
-  }
-
-  function deleteStudent(id) {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this student?"
-    );
-    if (confirmDelete) {
-      setStudents(
-        students.filter((student) => student.id !== id)
-      );
+    setEditId(student._id);
+  };
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this student?")) {
+      return;
     }
-  }
+    try {
+      await deleteStudent(id);
+      await fetchStudents();
+    } catch (err) {
+      setError("Unable to delete student.");
+    }
+  };
 
   return (
-    <div className="app">
-
+    <div className="container">
       <h1>Student Management System</h1>
-      <p>Manage student records</p>
 
-      <form onSubmit={handleSubmit} className="student-form">
-
+      <form onSubmit={handleSubmit}>
         <input
-          type="text"
-          placeholder="Student Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="Student Name"
+          required
         />
 
         <input
           type="email"
-          placeholder="Student Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
         />
 
         <input
-          type="text"
-          placeholder="Course"
           value={course}
           onChange={(e) => setCourse(e.target.value)}
+          placeholder="Course"
+          required
         />
 
         <button type="submit">
-          {editId !== null ? "Update Student" : "Add Student"}
+          {editId ? "Update Student" : "Add Student"}
         </button>
-
-        {editId !== null && (
+        {editId && (
           <button
             type="button"
             onClick={() => {
@@ -109,29 +111,33 @@ function App() {
             Cancel
           </button>
         )}
-
       </form>
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <h2>Student Records ({students.length})</h2>
-      <div className="student-list">
-        {students.map((student) => (
-          <div className="student-card" key={student.id}>
+      <h2>Student List</h2>
+
+      {loading ? (
+        <p>Loading students...</p>
+      ) : students.length === 0 ? (
+        <p>No students found.</p>
+      ) : (
+        students.map((student) => (
+          <div className="student-card" key={student._id}>
             <h3>{student.name}</h3>
             <p>{student.email}</p>
             <p>{student.course}</p>
-            <div className="actions">
-              <button onClick={() => editStudent(student)}>
-                Edit
-              </button>
-              <button onClick={() => deleteStudent(student.id)}>
-                Delete
-              </button>
-            </div>
+
+            <button onClick={() => handleEdit(student)}>
+              Edit
+            </button>
+
+            <button onClick={() => handleDelete(student._id)}>
+              Delete
+            </button>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 }
-
 export default App;
