@@ -1,0 +1,105 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+}
+
+.app {
+  padding: 40px;
+}
+
+.app h1 {
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.app > p {
+  color: #64748b;
+  margin-bottom: 25px;
+}
+
+.student-form {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.student-form input {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.student-form button {
+  padding: 12px 22px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.student-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.student-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.student-card h3 {
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.student-card p {
+  margin-top: 5px;
+  color: #64748b;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.actions button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.actions button:first-child {
+  background: #2563eb;
+  color: white;
+}
+
+.actions button:last-child {
+  background: #dc2626;
+  color: white;
+}
+
+.student-form button[type="button"] {
+  background: #64748b;
+  color: white;
+}
+
