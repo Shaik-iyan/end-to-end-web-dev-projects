@@ -1,4 +1,21 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700;800&display=swap');
+
+/* =================================
+   01. JAPANESE DESIGN SYSTEM
+================================= */
+
+:root {
+  --ink: #202a44;
+  --indigo: #26365d;
+  --red: #c94b48;
+  --sakura: #e8a8ad;
+  --cream: #f7f3e9;
+  --paper: #fffdf7;
+  --muted: #85899a;
+  --border: #e8e1d5;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,100 +23,410 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
+  min-height: 100vh;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(#d8cfc0 0.6px, transparent 0.6px);
+  background-size: 7px 7px;
 }
 
-.app {
-  padding: 40px;
+button,
+input {
+  font: inherit;
 }
 
-.app h1 {
-  color: #1e293b;
-  margin-bottom: 10px;
+/* =================================
+   02. MAIN PAPER CANVAS
+================================= */
+
+.container {
+  width: min(1150px, 94%);
+  margin: 45px auto;
+  padding: 42px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  box-shadow: 0 20px 60px rgba(38, 54, 93, 0.09);
+  position: relative;
+  overflow: hidden;
 }
 
-.app > p {
-  color: #64748b;
-  margin-bottom: 25px;
+/* Decorative Japanese red sun */
+
+.container::before {
+  content: '';
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  top: -90px;
+  right: 45px;
+  border-radius: 50%;
+  background: #c94b48;
+  opacity: 0.10;
+  pointer-events: none;
 }
 
-.student-form {
+.container::after {
+  content: '日本';
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  writing-mode: vertical-rl;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  color: var(--red);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* =================================
+   03. JAPANESE HEADER
+================================= */
+
+.container > h1 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--indigo);
+  margin-bottom: 38px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--indigo);
+  position: relative;
+}
+
+.container > h1::before {
+  content: '学';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-right: 14px;
+  background: var(--indigo);
+  color: white;
+  font-size: 25px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+
+.container > h1::after {
+  content: 'STUDENT ARCHIVE  •  LEARN AND GROW';
+  display: block;
+  margin-top: 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+}
+
+/* =================================
+   04. STUDENT REGISTRATION
+================================= */
+
+.container form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 32px 25px 25px;
+  margin-bottom: 42px;
+  background:
+    linear-gradient(135deg, #f8f1e8, #fff9f2);
+  border: 1px solid #e7d9c9;
+  border-top: 4px solid var(--red);
+  position: relative;
+}
+
+.container form::before {
+  content: '✿  STUDENT REGISTRATION';
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  padding: 6px 14px;
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+/* =================================
+   05. INPUT FIELDS
+================================= */
+
+.container input {
+  width: 100%;
+  padding: 15px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid #ded5c8;
+  border-radius: 3px;
+  outline: none;
+  font-size: 13px;
+  transition: 0.25s ease;
+}
+
+.container input::placeholder {
+  color: #aaa49a;
+}
+
+.container input:focus {
+  border-color: var(--red);
+  box-shadow: 0 3px 0 rgba(201, 75, 72, 0.12);
   background: white;
-  padding: 25px;
-  border-radius: 12px;
+}
+
+/* =================================
+   06. BUTTONS
+================================= */
+
+.container button {
+  padding: 13px 19px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  transition: 0.25s ease;
+}
+
+.container button:hover {
+  transform: translateY(-2px);
+}
+
+.container button:active {
+  transform: translateY(0);
+}
+
+/* Main registration button */
+
+.container form button[type="submit"] {
+  grid-column: 1 / -1;
+  padding: 16px;
+  background: var(--indigo);
+  color: white;
+  letter-spacing: 2px;
+}
+
+.container form button[type="submit"]:hover {
+  background: var(--red);
+  box-shadow: 0 7px 18px rgba(201, 75, 72, 0.2);
+}
+
+/* Cancel button */
+
+.container form button[type="button"] {
+  grid-column: 1 / -1;
+  background: #e9e4dc;
+  color: var(--ink);
+}
+
+/* =================================
+   07. ERROR MESSAGE
+================================= */
+
+.container > p[style] {
+  padding: 14px 17px;
+  margin-bottom: 22px;
+  color: #b53d3d !important;
+  background: #fff0ed;
+  border-left: 4px solid var(--red);
+  font-size: 13px;
+}
+
+/* =================================
+   08. STUDENT LIST HEADING
+================================= */
+
+.container > h2 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--indigo);
+  margin-bottom: 24px;
+}
+
+.container > h2::after {
+  content: '生徒一覧  /  STUDENT COLLECTION';
+  display: block;
+  margin-top: 8px;
+  color: var(--red);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+/* =================================
+   09. STUDENT PROFILE CARDS
+================================= */
+
+.student-card {
+  display: block;
+  position: relative;
+  padding: 23px 25px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--indigo);
+  transition: 0.3s ease;
+}
+
+.student-card:nth-of-type(even) {
+  border-left-color: var(--red);
+  background: #fffcf7;
+}
+
+.student-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 8px 25px rgba(38, 54, 93, 0.08);
+  border-color: #d9c8b9;
+}
+
+/* Student name */
+
+.student-card h3 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--indigo);
+  margin-bottom: 12px;
+}
+
+/* Student details */
+
+.student-card p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+
+/* Edit */
+
+.student-card button:first-of-type {
+  margin-top: 13px;
+  margin-right: 10px;
+  background: #e9edf7;
+  color: var(--indigo);
+}
+
+.student-card button:first-of-type:hover {
+  background: var(--indigo);
+  color: white;
+}
+
+/* Delete */
+
+.student-card button:last-of-type {
+  margin-top: 13px;
+  background: #fae9e7;
+  color: var(--red);
+}
+
+.student-card button:last-of-type:hover {
+  background: var(--red);
+  color: white;
+}
+
+/* =================================
+   10. LOADING AND EMPTY STATE
+================================= */
+
+.container > p:not([style]) {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* =================================
+   11. RESPONSIVE DESIGN
+================================= */
+
+@media (max-width: 750px) {
+  .container {
+    width: 94%;
+    margin: 20px auto;
+    padding: 24px;
+  }
+
+  .container form {
+    grid-template-columns: 1fr;
+    padding: 28px 18px 20px;
+  }
+
+  .container::after {
+    right: 15px;
+    top: 18px;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 450px) {
+  .container {
+    padding: 17px;
+  }
+
+  .container > h1 {
+    font-size: 27px;
+  }
+
+  .container > h1::before {
+    width: 37px;
+    height: 37px;
+    font-size: 19px;
+  }
+
+  .student-card {
+    padding: 18px;
+  }
+
+  .student-card button {
+    width: 100%;
+    margin-right: 0 !important;
+  }
+}
+
+.student-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 30px;
+  margin: 20px 0;
 }
 
-.student-form input {
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+.student-controls input,
+.student-controls select {
   flex: 1;
   min-width: 180px;
+  padding: 12px;
+  border: 1px solid #d8cdbb;
+  border-radius: 8px;
+  background: #fffdf7;
+  font-size: 14px;
 }
 
-.student-form button {
-  padding: 12px 22px;
-  border: none;
-  background: #2563eb;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+.student-count {
+  color: #26365d;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
-.student-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.student-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.student-card h3 {
-  margin-bottom: 10px;
-  color: #2563eb;
-}
-
-.student-card p {
-  margin-top: 5px;
-  color: #64748b;
-}
-
-.actions {
+.pagination {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin: 25px 0;
 }
 
-.actions button {
-  padding: 9px 18px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
-
-.actions button:first-child {
-  background: #2563eb;
-  color: white;
-}
-
-.actions button:last-child {
-  background: #dc2626;
-  color: white;
-}
-
-.student-form button[type="button"] {
-  background: #64748b;
-  color: white;
-}
-

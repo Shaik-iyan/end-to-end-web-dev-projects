@@ -3,14 +3,91 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student");
 
+
 router.get("/", async (req, res) => {
   try {
-    const students = await Student.find();
-    res.json(students);
+    // 1. Get query parameters
+    const {
+      search = "",
+      course = "",
+      sort = "name",
+      order = "asc",
+      page = 1,
+      limit = 5
+    } = req.query;
+
+    // 2. Create filter
+    const filter = {};
+
+    // Search by name or email
+    if (search.trim()) {
+      filter.$or = [
+        {
+          name: {
+            $regex: search.trim(),
+            $options: "i"
+          }
+        },
+        {
+          email: {
+            $regex: search.trim(),
+            $options: "i"
+          }
+        }
+      ];
+    }
+
+    // Filter by course
+    if (course.trim()) {
+      filter.course = course.trim();
+    }
+
+    // 3. Validate sorting
+    const allowedSortFields = [
+      "name",
+      "email",
+      "course",
+      "createdAt"
+    ];
+
+    const sortField = allowedSortFields.includes(sort)
+      ? sort
+      : "name";
+
+    const sortOrder = order === "desc" ? -1 : 1;
+
+    // 4. Pagination
+    const currentPage = Math.max(1, Number(page) || 1);
+
+    const pageSize = Math.min(
+      50,
+      Math.max(1, Number(limit) || 5)
+    );
+
+    // 5. Count matching students
+    const totalStudents = await Student.countDocuments(filter);
+
+    // 6. Get students
+    const students = await Student.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip((currentPage - 1) * pageSize)
+      .limit(pageSize);
+
+    // 7. Send response
+    res.json({
+      students,
+      currentPage,
+      totalPages: Math.ceil(totalStudents / pageSize),
+      totalStudents
+    });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message
+    });
   }
 });
+
 
 router.post("/", async (req, res) => {
   try {
