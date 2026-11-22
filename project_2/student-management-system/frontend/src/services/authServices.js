@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL ="https://end-to-end-web-dev-projects.onrender.com/api/auth";
 
 // Register a new user
 export const registerUser = async (userData) => {

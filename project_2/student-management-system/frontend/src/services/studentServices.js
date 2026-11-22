@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/students";
+const API_URL ="https://end-to-end-web-dev-projects.onrender.com/api/students";
 
 // Get authentication token
 const getAuthConfig = () => {
