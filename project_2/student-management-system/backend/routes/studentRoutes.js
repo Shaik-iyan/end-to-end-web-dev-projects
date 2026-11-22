@@ -1,9 +1,9 @@
 
 const express = require("express");
 const router = express.Router();
-const Student = require("../models/Student");
-
-
+const Student = require("../models/Student.js");
+const authMiddleware = require("../middleware/authmiddleware.js");
+router.use(authMiddleware);
 router.get("/", async (req, res) => {
   try {
     // 1. Get query parameters
